@@ -1,5 +1,11 @@
 # Off-Road Terrain Segmentation using DINOv2
 
+## Kaggle Notebook
+
+Full training and evaluation notebook with all outputs and logs:
+
+🔗 **[Kaggle Notebook — GRIET](https://www.kaggle.com/code/kadvaith/griet)**
+
 ## Overview
 Semantic segmentation model for off-road terrain using **DINOv2 ViT-B/14** backbone with a custom **Deep Segmentation Head**. The model classifies each pixel into 10 terrain classes.
 
