@@ -1,4 +1,3 @@
-%%writefile /kaggle/working/submission/train.py
 """
 Training script for Off-Road Segmentation using DINOv2
 Usage: python train.py --data_dir <path> --save_dir <path> [--epochs N] [--checkpoint <path>]
