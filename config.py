@@ -1,4 +1,3 @@
-%%writefile /kaggle/working/submission/config.py
 """
 Configuration for Off-Road Segmentation Model
 DINOv2 ViT-B/14 + Deep Segmentation Head
