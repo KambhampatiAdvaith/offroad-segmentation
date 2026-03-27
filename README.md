@@ -73,7 +73,7 @@ tqdm
 
 The trained checkpoint is hosted on Google Drive (too large for GitHub):
 
-**📥 [Download checkpoint_best.pth](YOUR_GOOGLE_DRIVE_LINK_HERE)**
+**📥 [Download checkpoint_best.pth](https://drive.google.com/file/d/1tl3DShW0rjZJQO_DxDkkl9V5i_GFTUw7/view?usp=sharing)**
 
 Place it in the project root directory after downloading.
 
