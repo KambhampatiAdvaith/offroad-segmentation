@@ -7,7 +7,7 @@ Full training and evaluation notebook with all outputs and logs:
 ---
 
 ## 📄 **Hackathon Report**
-**📋 [Read Full Hackathon Report (10 Pages - APEX AUTOMATORS)](./hackathon_report%20apex%20automators.pdf)**
+**📋 [Read Full Hackathon Report (BY APEX AUTOMATORS)](./hackathon_report%20apex%20automators.pdf)**
 
 **Report Includes:**
 - ✅ Methodology & 4-Stage Training Strategy
