@@ -1,4 +1,3 @@
-%%writefile /kaggle/working/submission/model.py
 """
 Model architecture: DINOv2 backbone + Deep Segmentation Head
 """
@@ -6,42 +5,23 @@ import torch
 import torch.nn as nn
 
 class DeepSegmentationHead(nn.Module):
-    """
-    Multi-scale segmentation head with depthwise separable convolutions
-    and residual connections for DINOv2 patch token features.
-    """
     def __init__(self, in_channels, out_channels, tokenW, tokenH):
         super().__init__()
         self.H, self.W = tokenH, tokenW
-
         self.stem = nn.Sequential(
-            nn.Conv2d(in_channels, 256, kernel_size=1),
-            nn.BatchNorm2d(256), nn.GELU())
-
+            nn.Conv2d(in_channels, 256, kernel_size=1), nn.BatchNorm2d(256), nn.GELU())
         self.block1 = nn.Sequential(
-            nn.Conv2d(256, 256, kernel_size=7, padding=3, groups=256),
-            nn.BatchNorm2d(256), nn.GELU(),
-            nn.Conv2d(256, 256, kernel_size=1),
-            nn.BatchNorm2d(256), nn.GELU())
-
+            nn.Conv2d(256, 256, kernel_size=7, padding=3, groups=256), nn.BatchNorm2d(256), nn.GELU(),
+            nn.Conv2d(256, 256, kernel_size=1), nn.BatchNorm2d(256), nn.GELU())
         self.block2 = nn.Sequential(
-            nn.Conv2d(256, 256, kernel_size=5, padding=2, groups=256),
-            nn.BatchNorm2d(256), nn.GELU(),
-            nn.Conv2d(256, 256, kernel_size=1),
-            nn.BatchNorm2d(256), nn.GELU())
-
+            nn.Conv2d(256, 256, kernel_size=5, padding=2, groups=256), nn.BatchNorm2d(256), nn.GELU(),
+            nn.Conv2d(256, 256, kernel_size=1), nn.BatchNorm2d(256), nn.GELU())
         self.block3 = nn.Sequential(
-            nn.Conv2d(256, 256, kernel_size=3, padding=1, groups=256),
-            nn.BatchNorm2d(256), nn.GELU(),
-            nn.Conv2d(256, 128, kernel_size=1),
-            nn.BatchNorm2d(128), nn.GELU())
-
+            nn.Conv2d(256, 256, kernel_size=3, padding=1, groups=256), nn.BatchNorm2d(256), nn.GELU(),
+            nn.Conv2d(256, 128, kernel_size=1), nn.BatchNorm2d(128), nn.GELU())
         self.upsample_refine = nn.Sequential(
-            nn.ConvTranspose2d(128, 128, kernel_size=2, stride=2),
-            nn.BatchNorm2d(128), nn.GELU(),
-            nn.Conv2d(128, 64, kernel_size=3, padding=1),
-            nn.BatchNorm2d(64), nn.GELU())
-
+            nn.ConvTranspose2d(128, 128, kernel_size=2, stride=2), nn.BatchNorm2d(128), nn.GELU(),
+            nn.Conv2d(128, 64, kernel_size=3, padding=1), nn.BatchNorm2d(64), nn.GELU())
         self.classifier = nn.Conv2d(64, out_channels, 1)
         self.dropout = nn.Dropout2d(0.1)
 
@@ -58,10 +38,6 @@ class DeepSegmentationHead(nn.Module):
 
 
 def build_model(device, checkpoint_path=None):
-    """
-    Build full model: DINOv2 backbone + segmentation head.
-    Optionally load from checkpoint.
-    """
     from config import N_CLASSES, IMG_WIDTH, IMG_HEIGHT, BACKBONE_NAME
 
     backbone = torch.hub.load("facebookresearch/dinov2", BACKBONE_NAME)
@@ -77,12 +53,15 @@ def build_model(device, checkpoint_path=None):
     if checkpoint_path:
         ckpt = torch.load(checkpoint_path, map_location=device, weights_only=False)
         classifier.load_state_dict(ckpt['model_state_dict'])
+        # Load finetuned backbone if available
         if 'backbone_finetuned' in ckpt:
             backbone_sd = backbone.state_dict()
             for name, param in ckpt['backbone_finetuned'].items():
                 if name in backbone_sd:
-                    backbone_sd[name] = param
+                    backbone_sd[name] = param.float()
             backbone.load_state_dict(backbone_sd)
-        print(f"✅ Loaded checkpoint: mIoU={ckpt.get('best_iou', 'N/A')}")
+            print(f"✅ Loaded checkpoint with finetuned backbone (epoch {ckpt.get('epoch', '?')})")
+        else:
+            print(f"✅ Loaded head-only checkpoint (epoch {ckpt.get('epoch', '?')}), using pretrained backbone")
 
     return backbone, classifier
