@@ -1,39 +1,59 @@
-## Training Progress & Visualizations
+# Off-Road Terrain Segmentation using DINOv2
 
-In this section, we review the major steps and outcomes of the training process for the off-road segmentation model. Visualizations from various training stages provide insights into the learning progress:
+## Kaggle Notebook
+Full training and evaluation notebook with all outputs and logs:
+🔗 **[Kaggle Notebook — GRIET](https://www.kaggle.com/code/kadvaith/griet)**
 
-- **Epoch 1**: Early learning stages showing initial weight adjustments.
-  ![Epoch 1 Visualization](path/to/epoch1_image.png)
+---
 
-- **Epoch 10**: Model starts recognizing key features.
-  ![Epoch 10 Visualization](path/to/epoch10_image.png)
+## 📄 **Hackathon Report**
+**📋 [Read Full Hackathon Report (10 Pages - APEX AUTOMATORS)](./hackathon_report%20apex%20automators.pdf)**
 
-- **Epoch 50**: Significant improvements in segmentation accuracy.
-  ![Epoch 50 Visualization](path/to/epoch50_image.png)
+**Report Includes:**
+- ✅ Methodology & 4-Stage Training Strategy
+- ✅ Results with mIoU 0.5375 & All Visualizations  
+- ✅ Challenges & Solutions (Class Imbalance, Occlusion)
+- ✅ Optimization Techniques & Future Work
 
-## Challenges & Solutions
+---
 
-The journey towards achieving robust off-road segmentation brought forth various challenges:
+## Overview
+Semantic segmentation model for off-road terrain using **DINOv2 ViT-B/14** backbone with a custom **Deep Segmentation Head**. The model classifies each pixel into 10 terrain classes.
 
-1. **Dataset Limitations**: 
-   - Challenge: Limited variety in terrain data.
-   - Solution: Data augmentation techniques such as rotation, flipping, and scaling were implemented to enhance diversity.
+---
 
-2. **Overfitting**: 
-   - Challenge: Initial model showed signs of overfitting after several epochs.
-   - Solution: Introduced dropout layers to mitigate this issue.
+## Final Results (1002 test images)
 
-3. **Real-time Performance**: 
-   - Challenge: Difficulty in achieving real-time segmentation speed.
-   - Solution: Optimized model architecture and reduced input image size while maintaining accuracy.
+| Metric | Without TTA | With TTA (recommended) |
+|---|---|---|
+| **mIoU** | 0.5341 | **0.5375** |
+| **mAP50** | 0.3983 | **0.4058** |
+| **Pixel Accuracy** | 0.7537 | **0.7552** |
 
-## Optimization Techniques
+### Per-Class Performance (with TTA)
 
-To enhance the model's performance, several optimization techniques were employed:
+| Class | IoU | AP50 |
+|---|---|---|
+| Background | N/A (absent) | N/A |
+| Trees | 0.4921 | 0.2211 |
+| Lush Bushes | 0.2280 | 0.0000 |
+| Dry Grass | 0.4546 | 0.1267 |
+| Dry Bushes | 0.5179 | 0.4541 |
+| Ground Clutter | N/A (absent) | N/A |
+| Logs | N/A (absent) | N/A |
+| Rocks | 0.4425 | 0.0908 |
+| Landscape | 0.6433 | 0.9481 |
+| Sky | 0.9840 | 1.0000 |
 
-- **Learning Rate Scheduling**: Utilized a learning rate decay method to improve convergence.
-- **Batch Normalization**: This helped in stabilizing and accelerating training by normalizing layer inputs.
-- **Model Pruning**: Focused on reducing the model size while retaining accuracy, allowing for faster inference.
-- **Transfer Learning**: Leveraged pre-trained models on similar tasks to boost initial performance.
+---
 
-These strategies have collectively contributed to improving the overall efficacy of the segmentation model.
+## Environment & Dependencies
+
+### Requirements
+- Python 3.8+
+- CUDA-compatible GPU (tested on NVIDIA T4/P100)
+- ~4GB GPU memory minimum
+
+### Install dependencies
+```bash
+pip install -r requirements.txt
