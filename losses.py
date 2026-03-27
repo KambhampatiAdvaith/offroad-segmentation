@@ -1,4 +1,3 @@
-%%writefile /kaggle/working/submission/losses.py
 """
 Loss functions: Focal Loss + Dice Loss
 """
