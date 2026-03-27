@@ -1,4 +1,3 @@
-%%writefile /kaggle/working/submission/test.py
 """
 Test/Inference script for Off-Road Segmentation
 Usage: python test.py --data_dir <path> --checkpoint <path> [--tta]
