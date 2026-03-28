@@ -1,54 +1,89 @@
-# FAILURE CASE ANALYSIS
+# Failure Case Analysis: Off-Road Terrain Segmentation
 
-## Comprehensive Analysis of Model Performance
+## 1. Performance Summary
 
-In this document, we analyze the performance of our segmentation model, focusing on the worst performing classes, root causes, current solutions, recommended improvements, best performing classes, and a roadmap for future work.
+| Class | IoU | AP50 | Status |
+|---|---|---|---|
+| Sky | 0.9840 | 1.0000 | ✅ Excellent |
+| Landscape | 0.6433 | 0.9481 | ✅ Good |
+| Dry Bushes | 0.5179 | 0.4541 | ⚠️ Moderate |
+| Trees | 0.4921 | 0.2211 | ⚠️ Moderate |
+| Dry Grass | 0.4546 | 0.1267 | ❌ Needs Work |
+| Rocks | 0.4425 | 0.0908 | ❌ Needs Work |
+| **Lush Bushes** | **0.2280** | 0.0000 | 🔴 **CRITICAL** |
 
-### Worst Performing Classes
+## 2. Worst Performing Classes
 
-1. **Lush Bushes** - F1 Score: 0.2280
-   - **Root Causes**: 
-     - Insufficient training data for this class.
-     - Similarity in texture and color with surrounding classes leading to misclassification.
-   - **Current Solutions**: 
-     - Data augmentation techniques applied.
-     - Focusing on min-max normalization for better feature scaling.
-   - **Recommended Improvements**:
-     - Collect more diverse training samples.
-     - Implement advanced segmentation algorithms like U-Net.
+### Lush Bushes (IoU: 0.2280) - CRITICAL
 
-2. **Rocks** - F1 Score: 0.4425
-   - **Root Causes**: 
-     - Variability in rock types and color, making it hard for the model to generalize.
-     - Occlusions in training images where rocks are partially hidden.
-   - **Current Solutions**: 
-     - Increased image diversity by including various environments.
-   - **Recommended Improvements**:
-     - Use synthetic data generation especially for occluded rocks.
-     - Conduct feature analysis to identify key characteristics of rocks in different settings.
+**Root Causes:**
+- Severely underrepresented in training data (PRIMARY cause)
+- Visual similarity to trees and landscape
+- Data imbalance - insufficient diverse samples
 
-3. **Dry Grass** - F1 Score: 0.4546
-   - **Root Causes**: 
-     - Misclassification with similar classes such as 'Lush Bushes' and 'Dirt'.
-   - **Current Solutions**: 
-     - Enhanced label quality for more accurate training.
-   - **Recommended Improvements**:
-     - Apply region-based segmentation to distinctively identify dry grass from similar classes.
+**Current Solutions Applied (from config.py):**
+- Class weight: 0.5 (CLASS_WEIGHTS[2]) ← TOO LOW
+- Focal Loss: gamma 2.0 (FOCAL_GAMMA)
+- Dice Loss: 50% weight in combined loss
+- Data augmentation: flip 50%, brightness 0.85-1.15, contrast 0.85-1.15
+- Backbone fine-tuning: last 6 blocks (UNFREEZE_LAST_N_BLOCKS: 6)
+- TTA: horizontal flips (+0.3% improvement)
 
-### Best Performing Classes
+**Why Insufficient:**
+- Class weight 0.5 is TOO LOW (trees get 2.0)
+- Generic augmentations don't address vegetation confusion
+- Only 6 blocks unfrozen - limited domain adaptation
+- No vegetation-specific techniques
 
-- **Water Bodies** - F1 Score: 0.95
-- **Tarmac Road** - F1 Score: 0.90
+**Recommended Quick Wins (1-2 hours):**
+1. Increase class weight: 0.5 → 2.0-3.0 in config.py
+2. Increase focal gamma: 2.0 → 2.5
+3. Add color jittering augmentation (Hue-Saturation)
+4. Expand augmentation ranges
 
-### Future Work Roadmap
-1. **Data Collection**: 
-   - Aim to gather a diverse dataset that covers all classes adequately, focusing on underrepresented categories such as Lush Bushes, Rocks, and Dry Grass.
-2. **Model Enhancement**: 
-   - Explore ensemble methods to combine predictions from multiple models.
-   - Investigate newer architectures in the segmentation domain.
-3. **Real-World Testing**: 
-   - Implement the model in real-time scenarios to assess effectiveness and gather feedback for further iterations.
+Expected Impact: +5-10% IoU
 
-### Conclusion
+### Rocks (IoU: 0.4425)
 
-By understanding the weaknesses in our segmentation model along with a detailed plan for addressing them, we aim to significantly improve our model's overall performance in upcoming versions.
+**Root Causes:**
+- Scale variability (tiny pebbles to large boulders)
+- DINOv2 patch size (14x14) misses small objects
+- Texture diversity across rock types
+
+**Recommended:** Increase class weight to 1.5-2.0, add FPN for multi-scale
+
+### Dry Grass (IoU: 0.4546)
+
+**Root Causes:**
+- Color confusion with dry bushes
+- Boundary ambiguity in transition zones
+
+**Recommended:** Increase weight to 1.5, add contrastive loss
+
+## 3. Implementation Roadmap
+
+**Phase 1 (1-2 hours): Quick Wins**
+- Update CLASS_WEIGHTS in config.py
+- Increase FOCAL_GAMMA
+- Add augmentations
+- Expected: +5-10% mIoU
+
+**Phase 2 (4-8 hours): Medium Effort**
+- Multi-scale training
+- FPN implementation
+- More backbone blocks unfrozen
+- Expected: +5-10% additional
+
+**Phase 3 (1-2 weeks): Long-term**
+- Collect more training data
+- Implement advanced architectures
+
+## 4. Success Metrics
+
+| Metric | Current | Goal |
+|---|---|---|
+| mIoU | 0.5375 | 0.6875+ |
+| Lush Bushes | 0.2280 | 0.6000+ |
+
+---
+*March 28, 2026 | mIoU (TTA): 0.5375*
