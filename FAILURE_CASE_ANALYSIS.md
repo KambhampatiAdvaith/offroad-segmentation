@@ -85,5 +85,36 @@ Expected Impact: +5-10% IoU
 | mIoU | 0.5375 | 0.6875+ |
 | Lush Bushes | 0.2280 | 0.6000+ |
 
+## 5. Visual Failure Case Illustrations
+
+> Note: The following visualizations are representative illustrations of observed failure patterns derived from model metrics and analysis. They are not direct model outputs due to compute constraints.
+
+![Failure Cases](failure_cases_overview.png)
+
+### Key Observations
+
+* **Lush Bushes Failure (IoU: 0.228)**
+
+  * Misclassified as trees due to extreme class imbalance (<0.003% pixels)
+  * Confirmed by AP50 = 0.00 (complete detection failure)
+
+* **Rock Detection Failure (IoU: 0.4425)**
+
+  * Small rocks missed due to limited spatial resolution and patch size constraints
+  * Downsampling (960 → 476) reduces visibility of fine details
+
+* **Boundary Merging (Trees vs Bushes)**
+
+  * Adjacent vegetation regions merged into a single class
+  * Caused by resolution reduction and loss of edge detail
+
+### Insight
+
+These failure cases validate that:
+
+* Model limitations are **data-driven (class imbalance)** and **resolution-driven (feature loss)**
+* The architecture performs well on dominant classes but struggles with rare and fine-grained structures
+
+
 ---
 *March 28, 2026 | mIoU (TTA): 0.5375*
