@@ -47,6 +47,17 @@ Semantic segmentation model for off-road terrain using **DINOv2 ViT-B/14** backb
 
 ---
 
+## 📊 Failure Case Analysis
+
+See [FAILURE_CASE_ANALYSIS.md](./FAILURE_CASE_ANALYSIS.md) for detailed analysis of challenging cases, model limitations, and future improvements.
+
+**Quick Summary:**
+- **Lush Bushes (0.228 IoU):** Dense vegetation easily confused with trees
+- **Rocks (0.4425 IoU):** Small objects with high scale variation
+- **Dry Grass (0.4546 IoU):** Texture similarity with dry bushes
+
+---
+
 ## Environment & Dependencies
 
 ### Requirements
@@ -55,19 +66,23 @@ Semantic segmentation model for off-road terrain using **DINOv2 ViT-B/14** backb
 - ~4GB GPU memory minimum
 
 ### Install dependencies
+```bash
 pip install -r requirements.txt
+```
 
 ### Quick Start
 
 #### Training
+```bash
 python train.py --data_dir <path_to_dataset> --save_dir ./checkpoints --epochs 40
+```
 
 #### Testing
+```bash
 python test.py --data_dir <path_to_dataset> --checkpoint ./checkpoints/checkpoint_best.pth --tta
+```
 
 #### Results
 - mIoU: **0.5375** (with TTA)
 - mAP50: **0.4058**
 - Pixel Accuracy: **0.7552**
-```bash
-pip install -r requirements.txt
