@@ -817,7 +817,7 @@ offroad-segmentation/
 ## 🔗 References & External Resources
 
 **Kaggle Notebook**  
-Full training and evaluation with all outputs: 🔗 [Kaggle Notebook — GRIET](https://www.kaggle.com)
+Full training and evaluation with all outputs: 🔗 [Kaggle Notebook — GRIET](https://www.kaggle.com/code/kadvaith/griet)
 
 **Hackathon Report**  
 Comprehensive methodology and analysis: 📋 [Full Hackathon Report (APEX AUTOMATORS)](hackathon_report_apex_automators.pdf)
