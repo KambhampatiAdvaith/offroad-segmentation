@@ -808,7 +808,6 @@ offroad-segmentation/
 
 - Check the [Troubleshooting](#-troubleshooting) section above for common issues
 - Review `FAILURE_CASE_ANALYSIS.md` for model-specific analysis
-- Check the [Kaggle Notebook](https://www.kaggle.com) for a working example
 - Review error messages — they usually indicate exactly what went wrong
 
 ---
