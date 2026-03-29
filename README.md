@@ -18,8 +18,7 @@
 - [Troubleshooting](#-troubleshooting)
 - [File Structure](#-file-structure--explanation)
 - [Performance Summary](#-performance-summary)
-- [References](#-references)
-
+- [References](#-references--external-resources)
 ---
 
 ## 🚀 Quick Start
