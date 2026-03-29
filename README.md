@@ -820,7 +820,7 @@ offroad-segmentation/
 Full training and evaluation with all outputs: 🔗 [Kaggle Notebook — GRIET](https://www.kaggle.com/code/kadvaith/griet)
 
 **Hackathon Report**  
-Comprehensive methodology and analysis: 📋 [Full Hackathon Report (APEX AUTOMATORS)](hackathon_report_apex_automators.pdf)
+Comprehensive methodology and analysis: 📋 [Full Hackathon Report (APEX AUTOMATORS)](https://github.com/KambhampatiAdvaith/offroad-segmentation/blob/main/hackathon_report%20apex%20automators.pdf)
 
 Report includes:
 - Methodology & 4-Stage Training Strategy
